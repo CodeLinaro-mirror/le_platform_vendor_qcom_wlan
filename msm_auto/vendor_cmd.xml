@@ -543,4 +543,10 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<Attribute name="BEACON_REPORTING_OP_TYPE" ID="1" TYPE="u8"/>
 		<Attribute name="BEACON_REPORTING_ACTIVE_REPORTING" ID="2" TYPE="FLAG"/>
 	</VendorCmd>
+        <!-- QCA_NL80211_VENDOR_SUBCMD_AVOID_FREQUENCY_EXT = 183 -->
+        <VendorCmd name="AVOID_FREQUENCY_EXT" ID="183">
+                <Attribute name="FREQ_RANGE" ID="1" TYPE="NESTED"/>
+                <Attribute name="FREQ_START" ID="2" TYPE="u32"/>
+                <Attribute name="FREQ_END" ID="3" TYPE="u32"/>
+        </VendorCmd>
 </WCN_VenTool>
