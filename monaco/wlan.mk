@@ -1,5 +1,8 @@
 WLAN_CHIPSET := qca_cld3
 
+# WLAN wear specific defconfig
+WLAN_PROFILE := wear
+
 #WPA
 WPA := wpa_cli
 
@@ -24,6 +27,9 @@ endif
 
 # WLAN specific aosp flag
 TARGET_USES_AOSP_FOR_WLAN := false
+
+# WLAN specific memory flag
+WLAN_TARGET_MONACO_HAS_LOW_RAM := true
 
 # Enable STA + SAP Concurrency.
 WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
