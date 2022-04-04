@@ -40,6 +40,8 @@ PRODUCT_PACKAGES += qsh_wifi_test
 PRODUCT_PACKAGES += init.vendor.wlan.rc
 PRODUCT_PACKAGES += wificfrtool
 PRODUCT_PACKAGES += ctrlapp_dut
+PRODUCT_PACKAGES += wifimyftm
+PRODUCT_PACKAGES += libwpa_drv_oem_hmd
 
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
@@ -83,8 +85,6 @@ TARGET_USES_NO_FW_QMI_CLIENT := true
 #Disable DMS MAC address feature in cnss-daemon
 TARGET_USES_NO_DMS_QMI_CLIENT := true
 
-# Enable Passphrase to PMK calculation in WiFiHal for NAN feature
-TARGET_USES_WIFI_HAL_CRYPTO_API := true
 
 ifneq ($(TARGET_WLAN_CHIP),)
 
