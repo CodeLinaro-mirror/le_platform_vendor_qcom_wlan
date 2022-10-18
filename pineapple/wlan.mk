@@ -7,17 +7,18 @@
 #
 # It also installs chip specific INI files.
 #
-# e.g. TARGET_WLAN_CHIP := qca6490 qca6390
-#	builds qca_cld3_qca6490.ko and qca_cld3_qca6390.ko
+# e.g. TARGET_WLAN_CHIP := kiwi_v2 mango
+#	builds qca_cld3_kiwi_v2.ko and qca_cld3_mango.ko
 #
-#	Copies configuration files from device/qcom/wlan/kalama/ to
+#	Copies configuration files from device/qcom/wlan/pineapple/ to
 #	$(TARGET_COPY_OUT_VENDOR)/etc/wifi/ like,
 #
-#	WCNSS_qcom_cfg_qca6490.ini -> qca6490/WCNSS_qcom_cfg.ini
-#	WCNSS_qcom_cfg_qca6390.ini -> qca6390/WCNSS_qcom_cfg.ini
+#	WCNSS_qcom_cfg_kiwi_v2.ini -> kiwi_v2/WCNSS_qcom_cfg.ini
+#	WCNSS_qcom_cfg_mango.ini -> mango/WCNSS_qcom_cfg.ini
 #
 #
-TARGET_WLAN_CHIP := kiwi kiwi_v2 qca6490
+
+TARGET_WLAN_CHIP := kiwi_v2 mango
 
 WLAN_CHIPSET := qca_cld3
 
@@ -49,18 +50,18 @@ WIFI_HIDL_FEATURE_AWARE := true
 ifneq ($(TARGET_WLAN_CHIP),)
 	PRODUCT_COPY_FILES += \
 			      $(foreach chip, $(TARGET_WLAN_CHIP), \
-			      device/qcom/wlan/kalama/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
+			      device/qcom/wlan/pineapple/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
 else
 	PRODUCT_COPY_FILES += \
-			      device/qcom/wlan/kalama/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
+			      device/qcom/wlan/pineapple/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
 
 endif
 
 PRODUCT_COPY_FILES += \
-				device/qcom/wlan/kalama/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-				device/qcom/wlan/kalama/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
-				device/qcom/wlan/kalama/icm.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/icm.conf \
-				device/qcom/wlan/kalama/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
+				device/qcom/wlan/pineapple/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+				device/qcom/wlan/pineapple/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+				device/qcom/wlan/pineapple/icm.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/icm.conf \
+				device/qcom/wlan/pineapple/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml
@@ -89,8 +90,11 @@ WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y CONFIG_CNSS2=m \
 				CONFIG_CNSS_PLAT_IPC_QMI_SVC=m \
 				CONFIG_CNSS_GENL=m CONFIG_WCNSS_MEM_PRE_ALLOC=m \
 				CONFIG_CNSS_UTILS=m CONFIG_BUS_AUTO_SUSPEND=y \
-				CONFIG_CNSS_HW_SECURE_DISABLE=y \
 				KERNEL_SUPPORTS_NESTED_COMPOSITES=n
+
+ifeq ($(TARGET_KERNEL_DLKM_SECURE_MSM_OVERRIDE), true)
+WLAN_PLATFORM_KBUILD_OPTIONS += CONFIG_CNSS_HW_SECURE_DISABLE=y
+endif
 
 PRODUCT_PACKAGES += cnss2.ko
 PRODUCT_PACKAGES += cnss_plat_ipc_qmi_svc.ko
