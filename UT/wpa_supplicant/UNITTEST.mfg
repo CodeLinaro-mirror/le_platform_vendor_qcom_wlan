@@ -1,0 +1,83 @@
+/*
+ * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted (subject to the limitations in the
+ * disclaimer below) provided that the following conditions are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ *
+ *   * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+ * GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+ * HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+ * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+<?xml version="1.0" encoding="UTF-8"?>
+<manage-config-options version="7">
+  <config/>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/eap_example/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/hs20/client/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/hs20/server/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/radius_example/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/ap/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/common/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/crypto/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/drivers/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/eap_common/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/eap_peer/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/eap_server/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/eapol_auth/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/eapol_supp/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/fst/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/l2_packet/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/p2p/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/pae/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/radius/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/rsn_supp/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/tls/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/utils/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/src/wps/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/ap-mgmt/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/asn1/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/dpp-uri/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/eap-aka-peer/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/eap-mschapv2-peer/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/eap-sim-peer/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/eapol-key-auth/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/eapol-key-supp/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/eapol-supp/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/tls-client/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/tls-server/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/wnm/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/fuzzing/x509/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/tests/hwsim/tnc/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/wpa_supplicant/binder/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/wpa_supplicant/dbus/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/wpa_supplicant/wpa_gui-qt4/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/wpaspy/</search-directory>
+  <search-directory type="TESTABLE_SOURCE_DIR">/external/wpa_supplicant_8/wpa_supplicant/</search-directory>
+</manage-config-options>                       
