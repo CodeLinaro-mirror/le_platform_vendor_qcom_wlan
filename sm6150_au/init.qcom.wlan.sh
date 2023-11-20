@@ -28,6 +28,8 @@
 #
 #
 
+runcon u:r:vendor_modprobe:s0 /vendor/bin/modprobe -a -d /vendor/lib/modules cnss2
+
 if [ ! -f /vendor/lib/modules/qca_cld3_wlan.ko ]; then
 	if lspci -kn |grep cnss_pci|grep ":1100";then
 		setprop ro.vendor.wlan.chip qca6290
@@ -47,3 +49,6 @@ if [ ! -f /vendor/lib/modules/qca_cld3_wlan.ko ]; then
 else
 	setprop ro.vendor.wlan.chip wlan
 fi
+
+runcon u:r:vendor_modprobe:s0 /vendor/bin/modprobe -a -d /vendor/lib/modules qca_cld3_$(getprop ro.vendor.wlan.chip)
+setprop vendor.wlan.driver.status "ok"
