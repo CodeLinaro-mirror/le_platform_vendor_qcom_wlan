@@ -17,7 +17,7 @@
 #
 #
 
-TARGET_WLAN_CHIP := kiwi_v2
+TARGET_WLAN_CHIP := kiwi_v2 qca6750
 
 WLAN_CHIPSET := qca_cld3
 
