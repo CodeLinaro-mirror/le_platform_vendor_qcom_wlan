@@ -1,22 +1,41 @@
-TARGET_WLAN_CHIP := adrastea
+#
+# TARGET_WLAN_CHIP directs QCACLD driver to be built for that particular
+# chipset(s). It can take multiple supported chipsets. Please refer QCACLD
+# driver code for supported chipsets.
+#
+# Default behaviour is invoked if TARGET_WLAN_CHIP is not defined.
+#
+# It also installs chip specific INI files.
+#
+# e.g. TARGET_WLAN_CHIP := kiwi_v2
+#	builds qca_cld3_kiwi_v2.ko
+#
+#	Copies configuration files from device/qcom/wlan/volcano/ to
+#	$(TARGET_COPY_OUT_VENDOR)/etc/wifi/ like,
+#
+#	WCNSS_qcom_cfg_kiwi_v2.ini -> kiwi_v2/WCNSS_qcom_cfg.ini
+#
+#
+
+TARGET_WLAN_CHIP := qca6750
 
 WLAN_CHIPSET := qca_cld3
 
 # Force chip-specific DLKM name
 TARGET_MULTI_WLAN := true
 
+#WPA
+WPA := wpa_cli
+WLAN_MODULES_VENDOR := $(WPA)
+
+# Package chip specific ko files if TARGET_WLAN_CHIP is defined.
 ifneq ($(TARGET_WLAN_CHIP),)
 	WLAN_MODULES_VENDOR += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip).ko)
 else
 	WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
 endif
-
-#WPA
-WPA := wpa_cli
-WLAN_MODULES_VENDOR := $(WPA)
-
 WLAN_MODULES_VENDOR += wifilearner
-#WLAN_MODULES_VENDOR += qsh_wifi_test
+WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
 WLAN_MODULES_VENDOR += wificfrtool
 WLAN_MODULES_VENDOR += ctrlapp_dut
@@ -45,7 +64,6 @@ WLAN_MODULES_VENDOR += pktlogconf
 WLAN_MODULES_VENDOR += libcld80211
 WLAN_MODULES_VENDOR += libwifi-hal-ctrl
 WLAN_MODULES_VENDOR += libwifi-hal-qcom
-WLAN_MODULES_VENDOR += libwifi-hal
 WLAN_MODULES_VENDOR += lib_driver_cmd_qcwcn
 WLAN_MODULES_VENDOR += libwpa_client
 WLAN_MODULES_VENDOR += wpa_supplicant
@@ -60,17 +78,17 @@ WIFI_HIDL_FEATURE_AWARE := true
 ifneq ($(TARGET_WLAN_CHIP),)
 	PRODUCT_COPY_FILES += \
 			      $(foreach chip, $(TARGET_WLAN_CHIP), \
-			      device/qcom/wlan/pitti/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
+			      device/qcom/wlan/volcano/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
 else
 	PRODUCT_COPY_FILES += \
-			      device/qcom/wlan/pitti/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
+			      device/qcom/wlan/volcano/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
 
 endif
 
 PRODUCT_COPY_FILES += \
-				device/qcom/wlan/pitti/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-				device/qcom/wlan/pitti/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
-				device/qcom/wlan/pitti/icm.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/icm.conf \
+				device/qcom/wlan/volcano/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+				device/qcom/wlan/volcano/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+				device/qcom/wlan/volcano/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml
@@ -94,8 +112,10 @@ TARGET_USES_NO_FW_QMI_CLIENT := true
 #Disable DMS MAC address feature in cnss-daemon
 TARGET_USES_NO_DMS_QMI_CLIENT := true
 
-#Disable subnet detection
-TARGET_USES_NO_SUBNET_DETECTION := true
+WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y \
+				CONFIG_ICNSS2_QMI=y CONFIG_CNSS_QMI_SVC=m \
+				CONFIG_CNSS_GENL=m CONFIG_WCNSS_MEM_PRE_ALLOC=m \
+				CONFIG_CNSS_UTILS=m KERNEL_SUPPORTS_NESTED_COMPOSITES=n
 
 WLAN_MODULES_VENDOR += icnss2.ko
 WLAN_MODULES_VENDOR += wlan_firmware_service.ko
@@ -104,3 +124,19 @@ WLAN_MODULES_VENDOR += cnss_prealloc.ko
 WLAN_MODULES_VENDOR += cnss_utils.ko
 
 PRODUCT_PACKAGES += $(WLAN_MODULES_VENDOR)
+PRODUCT_PACKAGES += libwifi-hal
+
+ifneq ($(TARGET_WLAN_CHIP),)
+
+	# Inject Kbuild options per chip
+	#
+	# Select proper chip configuration for building WLAN driver
+	# module. Currently driver supports only one chip
+	# configuration per build.
+	#
+	# e.g WLAN_KBUILD_OPTIONS_qca6490 := CONFIG_CNSS_QCA6490=y
+	#
+	# Note: Idealy, device specific flags should be enabled from
+	# device specific config file from driver itself instead of
+	# here.
+endif
