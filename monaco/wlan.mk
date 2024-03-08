@@ -11,6 +11,9 @@ PRODUCT_PACKAGES += wifilearner
 PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += ctrlapp_dut
 
+#Enable rc file from wpa_supplicant
+WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY ?= true
+
 ifneq ($(TARGET_SUPPORTS_WEARABLES),true)
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true

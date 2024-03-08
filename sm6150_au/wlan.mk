@@ -66,8 +66,8 @@ PRODUCT_PACKAGES += cnss_utils.ko
 # AOSP: interface combinations
 WIFI_HAL_INTERFACE_COMBINATIONS := {{{STA}, 1}, {{AP}, 1}, {{P2P}, 1}},\
                                    {{{STA}, 1}, {{NAN}, 1}}, \
-                                   {{{STA}, 2}, {{AP}, 1}}, \
-                                   {{{STA}, 1}, {{AP}, 2}}
+                                   {{{STA}, 2}, {{AP}, 2}}, \
+                                   {{{STA}, 2}, {{AP_BRIDGED}, 1}}
 
 # Override WLAN configurations
 # # Usage:
