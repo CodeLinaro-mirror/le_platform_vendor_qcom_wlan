@@ -95,6 +95,7 @@ ifneq ($(TARGET_WLAN_CHIP),)
 	# configuration per build.
 	#
 	# e.g WLAN_KBUILD_OPTIONS_qca6490 := CONFIG_CNSS_QCA6490=y
+	WLAN_KBUILD_OPTIONS_kiwi_v2 += CONFIG_SHUTDOWN_WLAN_IN_SYSTEM_SUSPEND=y
 endif
 
 # Enable q5drv
