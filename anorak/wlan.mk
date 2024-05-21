@@ -43,6 +43,25 @@ PRODUCT_PACKAGES += ctrlapp_dut
 PRODUCT_PACKAGES += wifimyftm
 PRODUCT_PACKAGES += libwpa_drv_oem_hmd
 
+LOWI_GPS_INCLUDE_FILE = $(PWD)/vendor/qcom/proprietary/gps-noship/build/gnss_common_path.in
+
+# NonGPS Platform but supports LOWI feature
+ifneq ($(wildcard $(LOWI_GPS_INCLUDE_FILE)),)
+BOARD_HAS_QCOM_LOWI_ONLY_SUPPORT := true
+endif
+
+ifeq ($(BOARD_HAS_QCOM_LOWI_ONLY_SUPPORT), true)
+PRODUCT_PACKAGES += lowi.conf
+PRODUCT_PACKAGES += libgps.utils
+PRODUCT_PACKAGES += liblowi_client
+PRODUCT_PACKAGES += liblowi_common
+PRODUCT_PACKAGES += liblowi_client
+PRODUCT_PACKAGES += liblowi_wifihal
+PRODUCT_PACKAGES += liblowi_wifihal_nl
+PRODUCT_PACKAGES += lowi-server
+PRODUCT_PACKAGES += loc_launcher
+endif
+
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
 
@@ -62,6 +81,7 @@ PRODUCT_COPY_FILES += \
 				device/qcom/wlan/anorak/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
 				device/qcom/wlan/anorak/icm.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/icm.conf \
 				device/qcom/wlan/anorak/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
+				frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml
 
