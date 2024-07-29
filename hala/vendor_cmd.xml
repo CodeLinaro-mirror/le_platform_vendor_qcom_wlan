@@ -405,14 +405,6 @@
 		<Attribute name="CONFIG_ARP_NS_OFFLOAD" ID="81" TYPE="u8"/>
 		<Attribute name="CONFIG_AUDIO_DATA_PATH" ID="82" TYPE="u8"/>
 		<Attribute name="CONFIG_DBAM" ID="83" TYPE="u8"/>
-		<Attribute name="CONFIG_TX_NSS_2GHZ" ID="110" TYPE="u8"/>
-		<Attribute name="CONFIG_RX_NSS_2GHZ" ID="111" TYPE="u8"/>
-		<Attribute name="CONFIG_TX_NSS_5GHZ" ID="112" TYPE="u8"/>
-		<Attribute name="CONFIG_RX_NSS_5GHZ" ID="113" TYPE="u8"/>
-		<Attribute name="CONFIG_NUM_TX_CHAINS_2GHZ" ID="114" TYPE="u8"/>
-		<Attribute name="CONFIG_NUM_RX_CHAINS_2GHZ" ID="115" TYPE="u8"/>
-		<Attribute name="CONFIG_NUM_TX_CHAINS_5GHZ" ID="116" TYPE="u8"/>
-		<Attribute name="CONFIG_NUM_RX_CHAINS_5GHZ" ID="117" TYPE="u8"/>
 	</VendorCmd>
 	<!-- QCA_NL80211_VENDOR_SUBCMD_GET_WIFI_CONFIGURATION = 75 -->
 	<VendorCmd name="GET_WIFI_CONFIG" ID="75">
