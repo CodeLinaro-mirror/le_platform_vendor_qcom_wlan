@@ -17,7 +17,13 @@
 #	WCNSS_qcom_cfg_qca6390.ini -> qca6390/WCNSS_qcom_cfg.ing
 #
 #
+ifeq ($(TARGET_BOARD_PLATFORM),parrot)
+ifeq ($(TARGET_BOARD_SUFFIX),66)
+TARGET_WLAN_CHIP := qca6750 adrastea
+else
 TARGET_WLAN_CHIP := qca6750 adrastea qca6490
+endif
+endif
 
 WLAN_CHIPSET := qca_cld3
 
@@ -29,17 +35,17 @@ WPA := wpa_cli
 
 # Package chip specific ko files if TARGET_WLAN_CHIP is defined.
 ifneq ($(TARGET_WLAN_CHIP),)
-	PRODUCT_PACKAGES += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip).ko)
+	WLAN_MODULES_VENDOR += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip).ko)
 else
-	PRODUCT_PACKAGES += $(WLAN_CHIPSET)_wlan.ko
+	WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
 endif
-PRODUCT_PACKAGES += wifilearner
-PRODUCT_PACKAGES += $(WPA)
-PRODUCT_PACKAGES += lowirpcd
-PRODUCT_PACKAGES += qsh_wifi_test
-PRODUCT_PACKAGES += init.vendor.wlan.rc
-PRODUCT_PACKAGES += wificfrtool
-PRODUCT_PACKAGES += ctrlapp_dut
+WLAN_MODULES_VENDOR += wifilearner
+WLAN_MODULES_VENDOR += $(WPA)
+WLAN_MODULES_VENDOR += lowirpcd
+WLAN_MODULES_VENDOR += qsh_wifi_test
+WLAN_MODULES_VENDOR += init.vendor.wlan.rc
+WLAN_MODULES_VENDOR += wificfrtool
+WLAN_MODULES_VENDOR += ctrlapp_dut
 
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
@@ -85,3 +91,19 @@ TARGET_USES_NO_DMS_QMI_CLIENT := true
 
 #Disable subnet detection
 TARGET_USES_NO_SUBNET_DETECTION := true
+
+ifeq ($(TARGET_BOARD_PLATFORM),parrot)
+ifeq ($(TARGET_BOARD_SUFFIX),66)
+PRODUCT_PACKAGES += icnss2.ko
+PRODUCT_PACKAGES += wlan_firmware_service.ko
+PRODUCT_PACKAGES += cnss_nl.ko
+PRODUCT_PACKAGES += cnss_prealloc.ko
+PRODUCT_PACKAGES += cnss_utils.ko
+
+WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y CONFIG_ICNSS2=m \
+				CONFIG_ICNSS2_QMI=y CONFIG_CNSS_QMI_SVC=m \
+				CONFIG_CNSS_GENL=m CONFIG_WCNSS_MEM_PRE_ALLOC=m \
+				CONFIG_CNSS_UTILS=m KERNEL_SUPPORTS_NESTED_COMPOSITES=n
+endif
+endif
+PRODUCT_PACKAGES += $(WLAN_MODULES_VENDOR)
