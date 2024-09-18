@@ -70,6 +70,7 @@ WLAN_MODULES_VENDOR += wpa_supplicant
 WLAN_MODULES_VENDOR += hostapd
 WLAN_MODULES_VENDOR += hostapd_cli
 WLAN_MODULES_VENDOR += hs20-osu-client
+WLAN_MODULES_VENDOR += wifi_qos_daemon
 
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
