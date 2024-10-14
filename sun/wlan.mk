@@ -39,15 +39,8 @@ WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
 WLAN_MODULES_VENDOR += wificfrtool
 WLAN_MODULES_VENDOR += ctrlapp_dut
-ifneq ($(wildcard vendor/qcom/proprietary/wlan/oem/oem-ss),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem
-endif
-ifneq ($(wildcard vendor/qcom/proprietary/wlan/oem/oem-hmd),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
-endif
-ifneq ($(wildcard vendor/qcom/proprietary/wlan/noship/wifi_qos_daemon),)
-WLAN_MODULES_VENDOR += wifi_qos_daemon
-endif
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174
 WLAN_MODULES_VENDOR += libtlvutil
@@ -77,6 +70,7 @@ WLAN_MODULES_VENDOR += wpa_supplicant
 WLAN_MODULES_VENDOR += hostapd
 WLAN_MODULES_VENDOR += hostapd_cli
 WLAN_MODULES_VENDOR += hs20-osu-client
+WLAN_MODULES_VENDOR += wifi_qos_daemon
 
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
