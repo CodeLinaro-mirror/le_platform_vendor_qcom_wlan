@@ -17,7 +17,7 @@
 #
 #
 
-TARGET_WLAN_CHIP := qca6750
+TARGET_WLAN_CHIP := qca6750 peach_v2
 
 WLAN_CHIPSET := qca_cld3
 
