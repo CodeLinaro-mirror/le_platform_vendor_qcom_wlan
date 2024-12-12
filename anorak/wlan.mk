@@ -60,6 +60,7 @@ PRODUCT_PACKAGES += liblowi_wifihal
 PRODUCT_PACKAGES += liblowi_wifihal_nl
 PRODUCT_PACKAGES += lowi-server
 PRODUCT_PACKAGES += loc_launcher
+PRODUCT_PACKAGES_DEBUG += lowi_test
 endif
 
 #Enable WIFI AWARE FEATURE
