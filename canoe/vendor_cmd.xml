@@ -405,6 +405,14 @@
 		<Attribute name="CONFIG_ARP_NS_OFFLOAD" ID="81" TYPE="u8"/>
 		<Attribute name="CONFIG_AUDIO_DATA_PATH" ID="82" TYPE="u8"/>
 		<Attribute name="CONFIG_DBAM" ID="83" TYPE="u8"/>
+		<Attribute name="CONFIG_TX_NSS_2GHZ" ID="110" TYPE="u8"/>
+		<Attribute name="CONFIG_RX_NSS_2GHZ" ID="111" TYPE="u8"/>
+		<Attribute name="CONFIG_TX_NSS_5GHZ" ID="112" TYPE="u8"/>
+		<Attribute name="CONFIG_RX_NSS_5GHZ" ID="113" TYPE="u8"/>
+		<Attribute name="CONFIG_NUM_TX_CHAINS_2GHZ" ID="114" TYPE="u8"/>
+		<Attribute name="CONFIG_NUM_RX_CHAINS_2GHZ" ID="115" TYPE="u8"/>
+		<Attribute name="CONFIG_NUM_TX_CHAINS_5GHZ" ID="116" TYPE="u8"/>
+		<Attribute name="CONFIG_NUM_RX_CHAINS_5GHZ" ID="117" TYPE="u8"/>
 		<Attribute name="CONFIG_ANT_DIV_PROBE_COUNT_WLAN" ID="124" TYPE="u16"/>
 		<Attribute name="CONFIG_ANT_DIV_PROBE_COUNT_BT" ID="125" TYPE="u16"/>
 		<Attribute name="CONFIG_ANT_DIV_PROBE_WLAN_RSSI_THRE" ID="126" TYPE="u16"/>
