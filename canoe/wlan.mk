@@ -17,7 +17,7 @@
 #
 #
 
-TARGET_WLAN_CHIP := kiwi_v2 peach_v2
+TARGET_WLAN_CHIP := kiwi_v2 peach_v2 wcn7750
 
 WLAN_CHIPSET := qca_cld3
 
@@ -56,6 +56,10 @@ WLAN_MODULES_VENDOR += libwpa_drv_oem
 endif
 ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-hmd),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
+WLAN_MODULES_VENDOR += wifi_qos_daemon
+WLAN_MODULES_VENDOR += libtxpbcsv
 endif
 ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
 WLAN_MODULES_VENDOR += libtcmd
