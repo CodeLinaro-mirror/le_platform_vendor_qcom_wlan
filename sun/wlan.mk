@@ -34,33 +34,48 @@ ifneq ($(TARGET_WLAN_CHIP),)
 else
 	WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
 endif
+ifneq ($(wildcard $(QCPATH)/wlan/common-tools),)
 WLAN_MODULES_VENDOR += wifilearner
+WLAN_MODULES_VENDOR += ctrlapp_dut
+WLAN_MODULES_VENDOR += libdpp_manager
+WLAN_MODULES_VENDOR += dppdaemon
+WLAN_MODULES_VENDOR += cnss_diag
+WLAN_MODULES_VENDOR += vendor_cmd_tool
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/utils),)
 WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
 WLAN_MODULES_VENDOR += wificfrtool
-WLAN_MODULES_VENDOR += ctrlapp_dut
+WLAN_MODULES_VENDOR += athdiag
+WLAN_MODULES_VENDOR += hal_proxy_daemon
+WLAN_MODULES_VENDOR += spectraltool
+WLAN_MODULES_VENDOR += pktlogconf
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-ss),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-hmd),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
+WLAN_MODULES_VENDOR += wifi_qos_daemon
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174
 WLAN_MODULES_VENDOR += libtlvutil
 WLAN_MODULES_VENDOR += libtlv2
-WLAN_MODULES_VENDOR += libdpp_manager
-WLAN_MODULES_VENDOR += dppdaemon
 WLAN_MODULES_VENDOR += wifimyftm
 WLAN_MODULES_VENDOR += myftm
+endif
+ifneq ($(wildcard $(QCPATH)/ftm),)
 WLAN_MODULES_VENDOR += ftmdaemon
 WLAN_MODULES_VENDOR += wdsdaemon
-WLAN_MODULES_VENDOR += athdiag
-WLAN_MODULES_VENDOR += cnss_diag
-WLAN_MODULES_VENDOR += vendor_cmd_tool
-WLAN_MODULES_VENDOR += hal_proxy_daemon
-WLAN_MODULES_VENDOR += spectraltool
-WLAN_MODULES_VENDOR += sigma_dut
-WLAN_MODULES_VENDOR += e_loop
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/cnss-daemon),)
 WLAN_MODULES_VENDOR += cnss-daemon
 WLAN_MODULES_VENDOR += cnss_cli
-WLAN_MODULES_VENDOR += pktlogconf
+endif
 WLAN_MODULES_VENDOR += libcld80211
 WLAN_MODULES_VENDOR += libwifi-hal-ctrl
 WLAN_MODULES_VENDOR += libwifi-hal-qcom
@@ -70,7 +85,8 @@ WLAN_MODULES_VENDOR += wpa_supplicant
 WLAN_MODULES_VENDOR += hostapd
 WLAN_MODULES_VENDOR += hostapd_cli
 WLAN_MODULES_VENDOR += hs20-osu-client
-WLAN_MODULES_VENDOR += wifi_qos_daemon
+WLAN_MODULES_VENDOR += sigma_dut
+WLAN_MODULES_VENDOR += e_loop
 
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true

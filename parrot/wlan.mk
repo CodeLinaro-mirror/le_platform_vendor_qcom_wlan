@@ -46,6 +46,11 @@ WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
 WLAN_MODULES_VENDOR += wificfrtool
 WLAN_MODULES_VENDOR += ctrlapp_dut
+ifeq ($(TARGET_BOARD_PLATFORM),parrot)
+ifeq ($(TARGET_BOARD_SUFFIX),66)
+WLAN_MODULES_VENDOR += wifimyftm
+endif
+endif
 
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
