@@ -92,10 +92,16 @@ ifeq ($(PRJ_PATH),)
 PRJ_PATH:=
 endif
 
+ifeq ($(TARGET_BASE_PRODUCT),neo_custom)
+INI_FILE_EXT := _neo_custom
+else
+INI_FILE_EXT :=
+endif
+
 ifneq ($(TARGET_WLAN_CHIP),)
 	PRODUCT_COPY_FILES += \
 			      $(foreach chip, $(TARGET_WLAN_CHIP), \
-			      device/qcom/$(PRJ_PATH)wlan/neo61/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
+			      device/qcom/$(PRJ_PATH)wlan/neo61/WCNSS_qcom_cfg_$(chip)$(INI_FILE_EXT).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
 else
 	PRODUCT_COPY_FILES += \
 			      device/qcom/$(PRJ_PATH)wlan/neo61/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
@@ -156,6 +162,7 @@ PRODUCT_PACKAGES += libwifi-hal
 
 ifeq ($(TARGET_BASE_PRODUCT),neo_custom)
 PRODUCT_PACKAGES_DEBUG += $(WLAN_MODULES_VENDOR_DEBUG)
+PRODUCT_PACKAGES += wcnss_qcom_cfg_ini_symlink
 endif
 
 ifneq ($(TARGET_WLAN_CHIP),)
