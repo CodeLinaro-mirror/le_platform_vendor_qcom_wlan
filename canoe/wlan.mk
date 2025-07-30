@@ -41,7 +41,15 @@ WLAN_MODULES_VENDOR += libdpp_manager
 WLAN_MODULES_VENDOR += dppdaemon
 WLAN_MODULES_VENDOR += cnss_diag
 WLAN_MODULES_VENDOR += vendor_cmd_tool
+
+# Setting this flag to enable HY11 bins inclusion. keep this line here as common-tools is hy11 shippable
+$(call soong_config_set,qtiwlan,hy11,true)
+
+# Add binaries under this, which needs to be delivered to HY11 builds
+WLAN_MODULES_VENDOR += wifi_qos_daemon
+
 endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/utils),)
 WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
@@ -61,6 +69,7 @@ ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
 WLAN_MODULES_VENDOR += wifi_qos_daemon
 WLAN_MODULES_VENDOR += libtxpbcsv
 endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174
