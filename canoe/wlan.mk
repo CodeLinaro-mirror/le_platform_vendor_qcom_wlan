@@ -57,6 +57,10 @@ endif
 ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-hmd),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
 endif
+ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
+WLAN_MODULES_VENDOR += wifi_qos_daemon
+WLAN_MODULES_VENDOR += libtxpbcsv
+endif
 ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174

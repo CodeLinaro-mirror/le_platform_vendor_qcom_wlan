@@ -23,23 +23,32 @@ WLAN_CHIPSET := qca_cld3
 
 # Force chip-specific DLKM name
 TARGET_MULTI_WLAN := true
+ifeq ($(TARGET_BASE_PRODUCT),neo_custom)
+WLAN_MODULES_VENDOR_DEBUG :=
+endif
 
 #WPA
 WPA := wpa_cli
 WLAN_MODULES_VENDOR := $(WPA)
 
 # Package chip specific ko files if TARGET_WLAN_CHIP is defined.
+ifneq ($(TARGET_BASE_PRODUCT),neo_custom)
 ifneq ($(TARGET_WLAN_CHIP),)
 	WLAN_MODULES_VENDOR += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip).ko)
 else
 	WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
 endif
+endif
 WLAN_MODULES_VENDOR += wifilearner
 WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
+ifneq ($(TARGET_MXR_VARIENT),true)
 WLAN_MODULES_VENDOR += wificfrtool
+endif
 WLAN_MODULES_VENDOR += ctrlapp_dut
+ifneq ($(TARGET_BASE_PRODUCT),neo_custom)
 WLAN_MODULES_VENDOR += libwpa_drv_oem
+endif
 WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174
@@ -47,7 +56,11 @@ WLAN_MODULES_VENDOR += libtlvutil
 WLAN_MODULES_VENDOR += libtlv2
 WLAN_MODULES_VENDOR += libdpp_manager
 WLAN_MODULES_VENDOR += dppdaemon
+ifeq ($(TARGET_BASE_PRODUCT),neo_custom)
+WLAN_MODULES_VENDOR_DEBUG += wifimyftm
+else
 WLAN_MODULES_VENDOR += wifimyftm
+endif
 WLAN_MODULES_VENDOR += myftm
 WLAN_MODULES_VENDOR += ftmdaemon
 WLAN_MODULES_VENDOR += wdsdaemon
@@ -75,21 +88,31 @@ WLAN_MODULES_VENDOR += hs20-osu-client
 WIFI_HIDL_FEATURE_AWARE := true
 
 # Copy chip specific INI files if TARGET_WLAN_CHIP is defined
+ifeq ($(PRJ_PATH),)
+PRJ_PATH:=
+endif
+
+ifeq ($(TARGET_BASE_PRODUCT),neo_custom)
+INI_FILE_EXT := _neo_custom
+else
+INI_FILE_EXT :=
+endif
+
 ifneq ($(TARGET_WLAN_CHIP),)
 	PRODUCT_COPY_FILES += \
 			      $(foreach chip, $(TARGET_WLAN_CHIP), \
-			      device/qcom/wlan/neo61/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
+			      device/qcom/$(PRJ_PATH)wlan/neo61/WCNSS_qcom_cfg_$(chip)$(INI_FILE_EXT).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
 else
 	PRODUCT_COPY_FILES += \
-			      device/qcom/wlan/neo61/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
+			      device/qcom/$(PRJ_PATH)wlan/neo61/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
 
 endif
 
 PRODUCT_COPY_FILES += \
-				device/qcom/wlan/neo61/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-				device/qcom/wlan/neo61/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
-				device/qcom/wlan/neo61/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
-				device/qcom/wlan/neo61/icm.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/icm.conf \
+				device/qcom/$(PRJ_PATH)wlan/neo61/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+				device/qcom/$(PRJ_PATH)wlan/neo61/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+				device/qcom/$(PRJ_PATH)wlan/neo61/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
+				device/qcom/$(PRJ_PATH)wlan/neo61/icm.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/icm.conf \
                                 frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml
 
@@ -125,15 +148,22 @@ ifeq ($(TARGET_KERNEL_DLKM_SECURE_MSM_OVERRIDE), true)
 WLAN_PLATFORM_KBUILD_OPTIONS += CONFIG_CNSS_HW_SECURE_DISABLE=y
 endif
 
+ifneq ($(TARGET_BASE_PRODUCT),neo_custom)
 WLAN_MODULES_VENDOR += cnss2.ko
 WLAN_MODULES_VENDOR += cnss_plat_ipc_qmi_svc.ko
 WLAN_MODULES_VENDOR += wlan_firmware_service.ko
 WLAN_MODULES_VENDOR += cnss_nl.ko
 WLAN_MODULES_VENDOR += cnss_prealloc.ko
 WLAN_MODULES_VENDOR += cnss_utils.ko
+endif
 
 PRODUCT_PACKAGES += $(WLAN_MODULES_VENDOR)
 PRODUCT_PACKAGES += libwifi-hal
+
+ifeq ($(TARGET_BASE_PRODUCT),neo_custom)
+PRODUCT_PACKAGES_DEBUG += $(WLAN_MODULES_VENDOR_DEBUG)
+PRODUCT_PACKAGES += wcnss_qcom_cfg_ini_symlink
+endif
 
 ifneq ($(TARGET_WLAN_CHIP),)
 
@@ -148,4 +178,8 @@ ifneq ($(TARGET_WLAN_CHIP),)
 	# Note: Idealy, device specific flags should be enabled from
 	# device specific config file from driver itself instead of
 	# here.
+endif
+
+ifeq ($(filter $(PLATFORM_VERSION),14 UpsideDownCake 15 VanillaIceCream 16 Baklava),$(PLATFORM_VERSION))
+    $(call soong_config_set,wifi,wifi_driver_android_version,android_u_above)
 endif

@@ -43,6 +43,7 @@ WLAN_MODULES_VENDOR += libwpa_client
 WLAN_MODULES_VENDOR += wpa_supplicant
 WLAN_MODULES_VENDOR += hostapd
 WLAN_MODULES_VENDOR += hostapd_cli
+WLAN_MODULES_VENDOR += android.hardware.wifi-service
 WLAN_MODULES_VENDOR += $(WPA)
 
 #Enable rc file from wpa_supplicant
@@ -69,7 +70,9 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml
 endif
 
-WLAN_MODULES_VENDOR += cnss2.ko
+WLAN_MODULES_VENDOR += cnss2_sdio.ko
+WLAN_MODULES_VENDOR += qcn_sdio.ko
+WLAN_MODULES_VENDOR += qti_sdio_client.ko
 WLAN_MODULES_VENDOR += cnss_prealloc.ko
 WLAN_MODULES_VENDOR += cnss_utils.ko
 WLAN_MODULES_VENDOR += cnss_nl.ko

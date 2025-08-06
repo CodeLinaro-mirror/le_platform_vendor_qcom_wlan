@@ -17,3 +17,7 @@ WIFI_DRIVER_STATE_ON := "ON"
 WIFI_DRIVER_STATE_OFF := "OFF"
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB_EVENT := "ON"
 BOARD_HOSTAPD_PRIVATE_LIB_EVENT := "ON"
+
+# Enable the below config only for vendor images that support Android-16 or above
+$(call soong_config_set,wifi,android_16_above,true)
+

@@ -28,6 +28,9 @@
 #
 #
 
+runcon u:r:vendor_modprobe:s0 /vendor/bin/modprobe -a -d /vendor/lib/modules cnss2
+runcon u:r:vendor_modprobe:s0 /vendor/bin/modprobe -a -d /vendor/lib/modules pcie-qcom-ecam
+
 if [ ! -f /vendor/lib/modules/qca_cld3_wlan.ko ]; then
 	if lspci -kn |grep cnss_pci|grep ":1100";then
 		setprop ro.vendor.wlan.chip qca6290

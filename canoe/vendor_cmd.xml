@@ -419,6 +419,7 @@
 		<Attribute name="CONFIG_ANT_DIV_PROBE_BT_RSSI_THRE" ID="127" TYPE="u16"/>
 		<Attribute name="CONFIG_ANT_DIV_WLAN_RSSI_DIFF" ID="128" TYPE="u16"/>
 		<Attribute name="CONFIG_ANT_DIV_BT_RSSI_DIFF" ID="129" TYPE="u16"/>
+		<Attribute name="CONFIG_DFS_NO_WAIT_SUPPORT" ID="131" TYPE="u8"/>
 	</VendorCmd>
 	<!-- QCA_NL80211_VENDOR_SUBCMD_GET_WIFI_CONFIGURATION = 75 -->
 	<VendorCmd name="GET_WIFI_CONFIG" ID="75">
