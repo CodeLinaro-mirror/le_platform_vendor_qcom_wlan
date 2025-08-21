@@ -17,8 +17,12 @@
 #
 #
 
-TARGET_WLAN_CHIP := kiwi_v2 peach_v2 wcn7750
+# Soong Values for controling Customer variant builds
+$(call soong_config_set,qtiwlan,hwasan,false)
+$(call soong_config_set,qtiwlan,hy11,false)
+$(call soong_config_set,qtiwlan,hy22,false)
 
+TARGET_WLAN_CHIP := kiwi_v2 peach_v2 wcn7750
 WLAN_CHIPSET := qca_cld3
 
 # Force chip-specific DLKM name
@@ -34,6 +38,7 @@ ifneq ($(TARGET_WLAN_CHIP),)
 else
 	WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
 endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/common-tools),)
 WLAN_MODULES_VENDOR += wifilearner
 WLAN_MODULES_VENDOR += ctrlapp_dut
@@ -44,10 +49,12 @@ WLAN_MODULES_VENDOR += vendor_cmd_tool
 
 # Setting this flag to enable HY11 bins inclusion. keep this line here as common-tools is hy11 shippable
 $(call soong_config_set,qtiwlan,hy11,true)
-
 # Add binaries under this, which needs to be delivered to HY11 builds
 WLAN_MODULES_VENDOR += wifi_qos_daemon
+endif
 
+ifneq (,$(filter hwaddress,$(SANITIZE_TARGET)))
+$(call soong_config_set,qtiwlan,hwasan,true)
 endif
 
 ifneq ($(wildcard $(QCPATH)/wlan/utils),)
