@@ -51,6 +51,24 @@ WLAN_MODULES_VENDOR += vendor_cmd_tool
 $(call soong_config_set,qtiwlan,hy11,true)
 # Add binaries under this, which needs to be delivered to HY11 builds
 WLAN_MODULES_VENDOR += wifi_qos_daemon
+WLAN_MODULES_VENDOR += AE_0_model.tflite
+WLAN_MODULES_VENDOR += AE_1_model.tflite
+WLAN_MODULES_VENDOR += AE_2_model.tflite
+WLAN_MODULES_VENDOR += AE_3_model.tflite
+WLAN_MODULES_VENDOR += AE_8_model.tflite
+WLAN_MODULES_VENDOR += AE_9_model.tflite
+WLAN_MODULES_VENDOR += CNN_2G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_320MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_2G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_320MHz_MM.tflite
 endif
 
 ifneq (,$(filter hwaddress,$(SANITIZE_TARGET)))
@@ -75,6 +93,24 @@ endif
 ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
 WLAN_MODULES_VENDOR += wifi_qos_daemon
 WLAN_MODULES_VENDOR += libtxpbcsv
+WLAN_MODULES_VENDOR += AE_0_model.tflite
+WLAN_MODULES_VENDOR += AE_1_model.tflite
+WLAN_MODULES_VENDOR += AE_2_model.tflite
+WLAN_MODULES_VENDOR += AE_3_model.tflite
+WLAN_MODULES_VENDOR += AE_8_model.tflite
+WLAN_MODULES_VENDOR += AE_9_model.tflite
+WLAN_MODULES_VENDOR += CNN_2G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_320MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_2G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_320MHz_MM.tflite
 endif
 
 ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)

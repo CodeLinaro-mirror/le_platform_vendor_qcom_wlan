@@ -45,6 +45,8 @@ endif
 
 PRODUCT_PACKAGES += $(patsubst %, $(WLAN_CHIPSET)_%.ko, $(TARGET_WLAN_CHIP))
 
+PRODUCT_PACKAGES += wificfrtool
+
 ifeq ($(PRODUCT_WLAN_DRIVER_ALWAYS_LOADED), true)
 # this script will set the property 'ro.vendor.wlan.chip' when boot completed,
 # which will trigger wlan driver loading.
