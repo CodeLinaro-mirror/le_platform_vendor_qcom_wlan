@@ -17,8 +17,12 @@
 #
 #
 
-TARGET_WLAN_CHIP := kiwi_v2 peach_v2 wcn7750
+# Soong Values for controling Customer variant builds
+$(call soong_config_set,qtiwlan,hwasan,false)
+$(call soong_config_set,qtiwlan,hy11,false)
+$(call soong_config_set,qtiwlan,hy22,false)
 
+TARGET_WLAN_CHIP := kiwi_v2 peach_v2 wcn7750
 WLAN_CHIPSET := qca_cld3
 
 # Force chip-specific DLKM name
@@ -34,6 +38,7 @@ ifneq ($(TARGET_WLAN_CHIP),)
 else
 	WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
 endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/common-tools),)
 WLAN_MODULES_VENDOR += wifilearner
 WLAN_MODULES_VENDOR += ctrlapp_dut
@@ -41,7 +46,60 @@ WLAN_MODULES_VENDOR += libdpp_manager
 WLAN_MODULES_VENDOR += dppdaemon
 WLAN_MODULES_VENDOR += cnss_diag
 WLAN_MODULES_VENDOR += vendor_cmd_tool
+
+# Setting this flag to enable HY11 bins inclusion. keep this line here as common-tools is hy11 shippable
+$(call soong_config_set,qtiwlan,hy11,true)
+# Add binaries under this, which needs to be delivered to HY11 builds
+WLAN_MODULES_VENDOR += wifi_qos_daemon
+WLAN_MODULES_VENDOR += libtensorflowlite_c_qcom
+WLAN_MODULES_VENDOR += AE_0_model.tflite
+WLAN_MODULES_VENDOR += AE_1_model.tflite
+WLAN_MODULES_VENDOR += AE_2_model.tflite
+WLAN_MODULES_VENDOR += AE_3_model.tflite
+WLAN_MODULES_VENDOR += AE_8_model.tflite
+WLAN_MODULES_VENDOR += AE_9_model.tflite
+WLAN_MODULES_VENDOR += CNN_2G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_320MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_2G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_320MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_2G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_2G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_5G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_5G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_5G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_5G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_320MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_320MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_2G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_2G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_5G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_5G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_5G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_5G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_320MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_320MHz_MM.tflite
 endif
+
+ifneq (,$(filter hwaddress,$(SANITIZE_TARGET)))
+$(call soong_config_set,qtiwlan,hwasan,true)
+endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/utils),)
 WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
@@ -60,7 +118,51 @@ endif
 ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
 WLAN_MODULES_VENDOR += wifi_qos_daemon
 WLAN_MODULES_VENDOR += libtxpbcsv
+WLAN_MODULES_VENDOR += libtensorflowlite_c_qcom
+WLAN_MODULES_VENDOR += AE_0_model.tflite
+WLAN_MODULES_VENDOR += AE_1_model.tflite
+WLAN_MODULES_VENDOR += AE_2_model.tflite
+WLAN_MODULES_VENDOR += AE_3_model.tflite
+WLAN_MODULES_VENDOR += AE_8_model.tflite
+WLAN_MODULES_VENDOR += AE_9_model.tflite
+WLAN_MODULES_VENDOR += CNN_2G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_320MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_2G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_5G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_6G_320MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_2G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_2G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_5G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_5G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_5G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_5G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_320MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_iPA_6G_320MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_2G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_2G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_5G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_5G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_5G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_5G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_20MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_20MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_160MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_160MHz_MM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_320MHz_EVM.tflite
+WLAN_MODULES_VENDOR += CNN_Orne_xPA_6G_320MHz_MM.tflite
 endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174

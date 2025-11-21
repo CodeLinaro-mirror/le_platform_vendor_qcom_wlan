@@ -17,13 +17,7 @@
 #	WCNSS_qcom_cfg_qca6390.ini -> qca6390/WCNSS_qcom_cfg.ing
 #
 #
-ifeq ($(TARGET_BOARD_PLATFORM),parrot)
-ifeq ($(TARGET_BOARD_SUFFIX),66)
-TARGET_WLAN_CHIP := qca6750 adrastea
-else
 TARGET_WLAN_CHIP := qca6750 adrastea qca6490
-endif
-endif
 
 WLAN_CHIPSET := qca_cld3
 
@@ -104,6 +98,8 @@ PRODUCT_PACKAGES += wlan_firmware_service.ko
 PRODUCT_PACKAGES += cnss_nl.ko
 PRODUCT_PACKAGES += cnss_prealloc.ko
 PRODUCT_PACKAGES += cnss_utils.ko
+PRODUCT_PACKAGES += cnss2.ko
+PRODUCT_PACKAGES += cnss_plat_ipc_qmi_svc.ko
 
 WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y CONFIG_ICNSS2=m \
 				CONFIG_ICNSS2_QMI=y CONFIG_CNSS_QMI_SVC=m \

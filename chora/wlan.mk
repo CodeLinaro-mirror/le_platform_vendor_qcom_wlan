@@ -1,4 +1,3 @@
-# Add supported chips for autodetection
 #
 # TARGET_WLAN_CHIP directs QCACLD driver to be built for that particular
 # chipset(s). It can take multiple supported chipsets. Please refer QCACLD
@@ -11,15 +10,19 @@
 # e.g. TARGET_WLAN_CHIP := kiwi_v2
 #	builds qca_cld3_kiwi_v2.ko
 #
-#	Copies configuration files from device/qcom/wlan/lahaina/ to
+#	Copies configuration files from device/qcom/wlan/chora/ to
 #	$(TARGET_COPY_OUT_VENDOR)/etc/wifi/ like,
 #
 #	WCNSS_qcom_cfg_kiwi_v2.ini -> kiwi_v2/WCNSS_qcom_cfg.ini
 #
 #
 
-TARGET_WLAN_CHIP := wlan qca6750 qca6490
+# Soong Values for controling Customer variant builds
+$(call soong_config_set,qtiwlan,hwasan,false)
+$(call soong_config_set,qtiwlan,hy11,false)
+$(call soong_config_set,qtiwlan,hy22,false)
 
+TARGET_WLAN_CHIP := wcn6450 wcn7750
 WLAN_CHIPSET := qca_cld3
 
 # Force chip-specific DLKM name
@@ -29,6 +32,13 @@ TARGET_MULTI_WLAN := true
 WPA := wpa_cli
 WLAN_MODULES_VENDOR := $(WPA)
 
+# Package chip specific ko files if TARGET_WLAN_CHIP is defined.
+#ifneq ($(TARGET_WLAN_CHIP),)
+	#WLAN_MODULES_VENDOR += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip).ko)
+#else
+	#WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
+#endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/common-tools),)
 WLAN_MODULES_VENDOR += wifilearner
 WLAN_MODULES_VENDOR += ctrlapp_dut
@@ -37,15 +47,19 @@ WLAN_MODULES_VENDOR += dppdaemon
 WLAN_MODULES_VENDOR += cnss_diag
 WLAN_MODULES_VENDOR += vendor_cmd_tool
 endif
+
+ifneq (,$(filter hwaddress,$(SANITIZE_TARGET)))
+$(call soong_config_set,qtiwlan,hwasan,true)
+endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/utils),)
-#WLAN_MODULES_VENDOR += qsh_wifi_test
+WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
 WLAN_MODULES_VENDOR += wificfrtool
 WLAN_MODULES_VENDOR += athdiag
 WLAN_MODULES_VENDOR += hal_proxy_daemon
 WLAN_MODULES_VENDOR += spectraltool
 WLAN_MODULES_VENDOR += pktlogconf
-WLAN_MODULES_VENDOR += lowirpcd
 endif
 ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-ss),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem
@@ -53,9 +67,7 @@ endif
 ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-hmd),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
 endif
-#ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
-#WLAN_MODULES_VENDOR += wifi_qos_daemon
-#endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174
@@ -87,43 +99,31 @@ WLAN_MODULES_VENDOR += e_loop
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
 
+# Copy chip specific INI files if TARGET_WLAN_CHIP is defined
+ifneq ($(TARGET_WLAN_CHIP),)
+	PRODUCT_COPY_FILES += \
+			      $(foreach chip, $(TARGET_WLAN_CHIP), \
+			      device/qcom/wlan/chora/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
+else
+	PRODUCT_COPY_FILES += \
+			      device/qcom/wlan/chora/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
+
+endif
+
 PRODUCT_COPY_FILES += \
-			device/qcom/wlan/lahaina/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-			device/qcom/wlan/lahaina/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
-			device/qcom/wlan/lahaina/icm.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/icm.conf \
-			device/qcom/wlan/lahaina/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
-			frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
-			frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
-			frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml
+				device/qcom/wlan/chora/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+				device/qcom/wlan/chora/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+				device/qcom/wlan/chora/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
+                                frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
+                                frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
+                                frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml
 
 # Enable STA + SAP Concurrency.
 WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 
-# Enable SAP + SAP Feature.
-QC_WIFI_HIDL_FEATURE_DUAL_AP := true
-
 # Enable vendor properties.
 PRODUCT_PROPERTY_OVERRIDES += \
 	wifi.aware.interface=wifi-aware0
-
-######## For multiple ko support ########
-
-# WLAN driver configuration file
-ifeq ($(strip $(shell expr $(words $(strip $(TARGET_WLAN_CHIP))) \>= 2)), 1)
-PRODUCT_COPY_FILES += \
-		      $(foreach chip, $(TARGET_WLAN_CHIP), \
-		      device/qcom/wlan/lahaina/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
-else
-TARGET_WLAN_CHIP := wlan
-PRODUCT_COPY_FILES += \
-		      device/qcom/wlan/lahaina/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
-endif
-
-
-PRODUCT_PACKAGES += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip).ko)
-
-# Enable STA + STA Feature.
-QC_WIFI_HIDL_FEATURE_DUAL_STA := true
 
 #Disable cnss-daemon QMI communication with FW
 TARGET_USES_NO_FW_QMI_CLIENT := true
@@ -132,9 +132,7 @@ TARGET_USES_NO_FW_QMI_CLIENT := true
 TARGET_USES_NO_DMS_QMI_CLIENT := true
 
 WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y CONFIG_CNSS2=m \
-				CONFIG_ICNSS2=m CONFIG_ICNSS2_QMI=y \
-				CONFIG_ICNSS2_DEBUG=y CONFIG_CNSS2_QMI=y \
-				CONFIG_CNSS_QMI_SVC=m \
+				CONFIG_CNSS2_QMI=y CONFIG_CNSS_QMI_SVC=m \
 				CONFIG_CNSS_PLAT_IPC_QMI_SVC=m \
 				CONFIG_CNSS_GENL=m CONFIG_WCNSS_MEM_PRE_ALLOC=m \
 				CONFIG_CNSS_UTILS=m CONFIG_BUS_AUTO_SUSPEND=y \
@@ -145,7 +143,6 @@ ifeq ($(TARGET_KERNEL_DLKM_SECURE_MSM_OVERRIDE), true)
 WLAN_PLATFORM_KBUILD_OPTIONS += CONFIG_CNSS_HW_SECURE_DISABLE=y
 endif
 
-WLAN_MODULES_VENDOR += icnss2.ko
 WLAN_MODULES_VENDOR += cnss2.ko
 WLAN_MODULES_VENDOR += cnss_plat_ipc_qmi_svc.ko
 WLAN_MODULES_VENDOR += wlan_firmware_service.ko
@@ -155,18 +152,6 @@ WLAN_MODULES_VENDOR += cnss_utils.ko
 
 PRODUCT_PACKAGES += $(WLAN_MODULES_VENDOR)
 PRODUCT_PACKAGES += libwifi-hal
-
-
-# Use default_config for all chips. Used with TARGET_WLAN_CHIP.
-WLAN_CFG_USE_DEFAULT := true
-
-# Inject Kbuild options per chip
-#
-# Select proper chip configuration for building WLAN driver module. Currently
-# driver supports only one chip configuration per build.
-#
-WLAN_KBUILD_OPTIONS_wlan := CONFIG_CNSS_QCA6490=y
-WLAN_KBUILD_OPTIONS_qca6750 := CONFIG_CNSS_QCA6750=y
 
 ifneq ($(TARGET_WLAN_CHIP),)
 

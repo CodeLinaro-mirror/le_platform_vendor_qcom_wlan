@@ -12,8 +12,12 @@ WLAN_MODULES_VENDOR += wifilearner
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
 WLAN_MODULES_VENDOR += wificfrtool
 WLAN_MODULES_VENDOR += ctrlapp_dut
+ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-ss),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-hmd),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
+endif
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174
 WLAN_MODULES_VENDOR += libtlvutil
@@ -85,6 +89,7 @@ WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y CONFIG_ICNSS2=m \
 				CONFIG_SLATE_MODULE_ENABLED=y
 
 #WLAN_MODULES_VENDOR += WifiResTarget
+WLAN_MODULES_VENDOR += ServiceWifiResourcesTarget_Vendor
 
 PRODUCT_PACKAGES +=$(WLAN_MODULES_VENDOR)
 

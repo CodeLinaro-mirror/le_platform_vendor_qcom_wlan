@@ -1,0 +1,27 @@
+## wlan flags
+BOARD_HAS_QCOM_WLAN := true
+
+# TODO: Check if below 4 configs are required for WLAN.
+BOARD_HAS_QCOM_WIGIG := true
+TARGET_USES_ICNSS_QMI := true
+TARGET_USES_SUBNET_DETECTION := true
+BOARD_HAS_ATH_WLAN_AR6320 := true
+
+# wlan host driver flags
+BOARD_WLAN_DEVICE := qcwcn
+WIFI_DRIVER_BUILT := qca_cld3
+WIFI_DRIVER_DEFAULT := qca_cld3
+WIFI_DRIVER_INSTALL_TO_KERNEL_OUT := true
+BOARD_HAS_CFG80211_KERNEL3_4 := true
+
+# WPA Supplicant and Hostapd flags
+WPA_SUPPLICANT_VERSION := VER_0_8_X
+HOSTAPD_VERSION := VER_0_8_X
+BOARD_WPA_SUPPLICANT_DRIVER := NL80211
+BOARD_HOSTAPD_DRIVER := NL80211
+WIFI_FEATURE_HOSTAPD_11AX := true
+WIFI_FEATURE_HOSTAPD_11BE := true
+
+WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := //hardware/qcom/wlan/qcwcn/wpa_supplicant_8_lib:lib_driver_cmd_$(BOARD_WLAN_DEVICE)
+BOARD_HOSTAPD_PRIVATE_LIB := //hardware/qcom/wlan/qcwcn/wpa_supplicant_8_lib:lib_driver_cmd_$(BOARD_WLAN_DEVICE)
