@@ -1,17 +1,88 @@
 # Add supported chips for autodetection
-TARGET_WLAN_CHIP := wlan qca6750
+#
+# TARGET_WLAN_CHIP directs QCACLD driver to be built for that particular
+# chipset(s). It can take multiple supported chipsets. Please refer QCACLD
+# driver code for supported chipsets.
+#
+# Default behaviour is invoked if TARGET_WLAN_CHIP is not defined.
+#
+# It also installs chip specific INI files.
+#
+# e.g. TARGET_WLAN_CHIP := kiwi_v2
+#	builds qca_cld3_kiwi_v2.ko
+#
+#	Copies configuration files from device/qcom/wlan/lahaina/ to
+#	$(TARGET_COPY_OUT_VENDOR)/etc/wifi/ like,
+#
+#	WCNSS_qcom_cfg_kiwi_v2.ini -> kiwi_v2/WCNSS_qcom_cfg.ini
+#
+#
+
+TARGET_WLAN_CHIP := wlan qca6750 qca6490
 
 WLAN_CHIPSET := qca_cld3
 
+# Force chip-specific DLKM name
+TARGET_MULTI_WLAN := true
+
 #WPA
 WPA := wpa_cli
+WLAN_MODULES_VENDOR := $(WPA)
 
-PRODUCT_PACKAGES += wifilearner
-PRODUCT_PACKAGES += dppdaemon
-PRODUCT_PACKAGES += $(WPA)
-PRODUCT_PACKAGES += lowirpcd
-PRODUCT_PACKAGES += qsh_wifi_test
-PRODUCT_PACKAGES += ctrlapp_dut
+ifneq ($(wildcard $(QCPATH)/wlan/common-tools),)
+WLAN_MODULES_VENDOR += wifilearner
+WLAN_MODULES_VENDOR += ctrlapp_dut
+WLAN_MODULES_VENDOR += libdpp_manager
+WLAN_MODULES_VENDOR += dppdaemon
+WLAN_MODULES_VENDOR += cnss_diag
+WLAN_MODULES_VENDOR += vendor_cmd_tool
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/utils),)
+#WLAN_MODULES_VENDOR += qsh_wifi_test
+WLAN_MODULES_VENDOR += init.vendor.wlan.rc
+WLAN_MODULES_VENDOR += wificfrtool
+WLAN_MODULES_VENDOR += athdiag
+WLAN_MODULES_VENDOR += hal_proxy_daemon
+WLAN_MODULES_VENDOR += spectraltool
+WLAN_MODULES_VENDOR += pktlogconf
+WLAN_MODULES_VENDOR += lowirpcd
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-ss),)
+WLAN_MODULES_VENDOR += libwpa_drv_oem
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-hmd),)
+WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
+endif
+#ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
+#WLAN_MODULES_VENDOR += wifi_qos_daemon
+#endif
+ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
+WLAN_MODULES_VENDOR += libtcmd
+WLAN_MODULES_VENDOR += libtestcmd6174
+WLAN_MODULES_VENDOR += libtlvutil
+WLAN_MODULES_VENDOR += libtlv2
+WLAN_MODULES_VENDOR += wifimyftm
+WLAN_MODULES_VENDOR += myftm
+endif
+ifneq ($(wildcard $(QCPATH)/ftm),)
+WLAN_MODULES_VENDOR += ftmdaemon
+WLAN_MODULES_VENDOR += wdsdaemon
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/cnss-daemon),)
+WLAN_MODULES_VENDOR += cnss-daemon
+WLAN_MODULES_VENDOR += cnss_cli
+endif
+WLAN_MODULES_VENDOR += libcld80211
+WLAN_MODULES_VENDOR += libwifi-hal-ctrl
+WLAN_MODULES_VENDOR += libwifi-hal-qcom
+WLAN_MODULES_VENDOR += lib_driver_cmd_qcwcn
+WLAN_MODULES_VENDOR += libwpa_client
+WLAN_MODULES_VENDOR += wpa_supplicant
+WLAN_MODULES_VENDOR += hostapd
+WLAN_MODULES_VENDOR += hostapd_cli
+WLAN_MODULES_VENDOR += hs20-osu-client
+WLAN_MODULES_VENDOR += sigma_dut
+WLAN_MODULES_VENDOR += e_loop
 
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
@@ -54,8 +125,37 @@ PRODUCT_PACKAGES += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip)
 # Enable STA + STA Feature.
 QC_WIFI_HIDL_FEATURE_DUAL_STA := true
 
+#Disable cnss-daemon QMI communication with FW
+TARGET_USES_NO_FW_QMI_CLIENT := true
+
 #Disable DMS MAC address feature in cnss-daemon
 TARGET_USES_NO_DMS_QMI_CLIENT := true
+
+WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y CONFIG_CNSS2=m \
+				CONFIG_ICNSS2=m CONFIG_ICNSS2_QMI=y \
+				CONFIG_ICNSS2_DEBUG=y CONFIG_CNSS2_QMI=y \
+				CONFIG_CNSS_QMI_SVC=m \
+				CONFIG_CNSS_PLAT_IPC_QMI_SVC=m \
+				CONFIG_CNSS_GENL=m CONFIG_WCNSS_MEM_PRE_ALLOC=m \
+				CONFIG_CNSS_UTILS=m CONFIG_BUS_AUTO_SUSPEND=y \
+				KERNEL_SUPPORTS_NESTED_COMPOSITES=n \
+				CONFIG_CNSS2_SSR_DRIVER_DUMP=y
+
+ifeq ($(TARGET_KERNEL_DLKM_SECURE_MSM_OVERRIDE), true)
+WLAN_PLATFORM_KBUILD_OPTIONS += CONFIG_CNSS_HW_SECURE_DISABLE=y
+endif
+
+WLAN_MODULES_VENDOR += icnss2.ko
+WLAN_MODULES_VENDOR += cnss2.ko
+WLAN_MODULES_VENDOR += cnss_plat_ipc_qmi_svc.ko
+WLAN_MODULES_VENDOR += wlan_firmware_service.ko
+WLAN_MODULES_VENDOR += cnss_nl.ko
+WLAN_MODULES_VENDOR += cnss_prealloc.ko
+WLAN_MODULES_VENDOR += cnss_utils.ko
+
+PRODUCT_PACKAGES += $(WLAN_MODULES_VENDOR)
+PRODUCT_PACKAGES += libwifi-hal
+
 
 # Use default_config for all chips. Used with TARGET_WLAN_CHIP.
 WLAN_CFG_USE_DEFAULT := true
@@ -67,3 +167,18 @@ WLAN_CFG_USE_DEFAULT := true
 #
 WLAN_KBUILD_OPTIONS_wlan := CONFIG_CNSS_QCA6490=y
 WLAN_KBUILD_OPTIONS_qca6750 := CONFIG_CNSS_QCA6750=y
+
+ifneq ($(TARGET_WLAN_CHIP),)
+
+	# Inject Kbuild options per chip
+	#
+	# Select proper chip configuration for building WLAN driver
+	# module. Currently driver supports only one chip
+	# configuration per build.
+	#
+	# e.g WLAN_KBUILD_OPTIONS_qca6490 := CONFIG_CNSS_QCA6490=y
+	#
+	# Note: Idealy, device specific flags should be enabled from
+	# device specific config file from driver itself instead of
+	# here.
+endif

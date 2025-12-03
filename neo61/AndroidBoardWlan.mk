@@ -24,7 +24,9 @@ LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_ETC)/hostapd
 LOCAL_SRC_FILES    := hostapd.deny
 include $(BUILD_PREBUILT)
 
+ifneq ($(TARGET_BASE_PRODUCT),neo_custom)
 # create symbolic links for INI file
 $(shell mkdir -p $(TARGET_OUT_VENDOR)/firmware/wlan/qca_cld; \
 ln -sf /vendor/etc/wifi/WCNSS_qcom_cfg.ini \
 $(TARGET_OUT_VENDOR)/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini)
+endif
