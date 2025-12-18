@@ -27,6 +27,9 @@ ifeq ($(TARGET_BASE_PRODUCT),neo_custom)
 WLAN_MODULES_VENDOR_DEBUG :=
 endif
 
+#Force using Android.mk for WPA configuration instead of Soong
+FORCE_USE_ANDROIDMK_FOR_WPA_CONF := true
+
 #WPA
 WPA := wpa_cli
 WLAN_MODULES_VENDOR := $(WPA)

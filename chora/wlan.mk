@@ -131,39 +131,6 @@ TARGET_USES_NO_FW_QMI_CLIENT := true
 #Disable DMS MAC address feature in cnss-daemon
 TARGET_USES_NO_DMS_QMI_CLIENT := true
 
-WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y CONFIG_CNSS2=m \
-				CONFIG_CNSS2_QMI=y CONFIG_CNSS_QMI_SVC=m \
-				CONFIG_CNSS_PLAT_IPC_QMI_SVC=m \
-				CONFIG_CNSS_GENL=m CONFIG_WCNSS_MEM_PRE_ALLOC=m \
-				CONFIG_CNSS_UTILS=m CONFIG_BUS_AUTO_SUSPEND=y \
-				KERNEL_SUPPORTS_NESTED_COMPOSITES=n \
-				CONFIG_CNSS2_SSR_DRIVER_DUMP=y
-
-ifeq ($(TARGET_KERNEL_DLKM_SECURE_MSM_OVERRIDE), true)
-WLAN_PLATFORM_KBUILD_OPTIONS += CONFIG_CNSS_HW_SECURE_DISABLE=y
-endif
-
-WLAN_MODULES_VENDOR += cnss2.ko
-WLAN_MODULES_VENDOR += cnss_plat_ipc_qmi_svc.ko
-WLAN_MODULES_VENDOR += wlan_firmware_service.ko
-WLAN_MODULES_VENDOR += cnss_nl.ko
-WLAN_MODULES_VENDOR += cnss_prealloc.ko
-WLAN_MODULES_VENDOR += cnss_utils.ko
 
 PRODUCT_PACKAGES += $(WLAN_MODULES_VENDOR)
 PRODUCT_PACKAGES += libwifi-hal
-
-ifneq ($(TARGET_WLAN_CHIP),)
-
-	# Inject Kbuild options per chip
-	#
-	# Select proper chip configuration for building WLAN driver
-	# module. Currently driver supports only one chip
-	# configuration per build.
-	#
-	# e.g WLAN_KBUILD_OPTIONS_qca6490 := CONFIG_CNSS_QCA6490=y
-	#
-	# Note: Idealy, device specific flags should be enabled from
-	# device specific config file from driver itself instead of
-	# here.
-endif

@@ -41,6 +41,10 @@ PRODUCT_PACKAGES += cnss_prealloc.ko
 PRODUCT_PACKAGES += cnss_utils.ko
 PRODUCT_PACKAGES += cnss_nl.ko
 
+PRODUCT_SOONG_NAMESPACES += \
+    hardware/qcom/wlan \
+    hardware/qcom/wlan/qcwcn
+
 WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y CONFIG_ICNSS2=m \
 				CONFIG_ICNSS2_QMI=y CONFIG_CNSS_QMI_SVC=m \
 				CONFIG_ICNSS2_DEBUG=y CONFIG_CNSS_GENL=m \
