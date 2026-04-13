@@ -49,7 +49,9 @@ endif
 
 ifeq ($(TARGET_BOARD_PLATFORM),parrot)
 ifeq ($(TARGET_BOARD_SUFFIX),66)
+ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
 WLAN_MODULES_VENDOR += wifimyftm
+endif
 endif
 endif
 

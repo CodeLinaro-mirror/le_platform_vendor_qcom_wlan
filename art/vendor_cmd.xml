@@ -1050,4 +1050,28 @@
 			</Attribute>
 		</Attribute>
 	</VendorCmd>
+	<VendorCmd name="DCS_CONFIG" ID="269">
+		<Attribute name="DCS_LINK_ID" ID="1" TYPE="u8"/>
+		<Attribute name="DCS_CMD_TYPE" ID="2" TYPE="u8"/>
+		<Attribute name="DCS_ENABLE" ID="3" TYPE="u16"/>
+		<Attribute name="INTERFERENCE_DETECTION_THRESHOLD" ID="4" TYPE="u32"/>
+		<Attribute name="PHY_ERR_PENALTY" ID="5" TYPE="u32"/>
+		<Attribute name="PHY_ERR_THRESHOLD" ID="6" TYPE="u32"/>
+		<Attribute name="RADAR_ERR_THRESHOLD" ID="7" TYPE="u32"/>
+		<Attribute name="TX_ERR_THRESHOLD" ID="8" TYPE="u32"/>
+		<Attribute name="INTERFERENCE_DETECTION_WINDOW" ID="9" TYPE="u32"/>
+		<Attribute name="COCHANNEL_INTERFERENCE_THRESHOLD" ID="10" TYPE="u8"/>
+		<Attribute name="MAX_CU" ID="11" TYPE="u8"/>
+		<VendorRsp name="DCS_CONFIG" ID="269" ATTR_MAX="76">
+			<Attribute name="DCS_ENABLE" ID="3" TYPE="u16"/>
+			<Attribute name="INTERFERENCE_DETECTION_THRESHOLD" ID="4" TYPE="u32"/>
+			<Attribute name="PHY_ERR_PENALTY" ID="5" TYPE="u32"/>
+			<Attribute name="PHY_ERR_THRESHOLD" ID="6" TYPE="u32"/>
+			<Attribute name="RADAR_ERR_THRESHOLD" ID="7" TYPE="u32"/>
+			<Attribute name="TX_ERR_THRESHOLD" ID="8" TYPE="u32"/>
+			<Attribute name="INTERFERENCE_DETECTION_WINDOW" ID="9" TYPE="u32"/>
+			<Attribute name="COCHANNEL_INTERFERENCE_THRESHOLD" ID="10" TYPE="u8"/>
+			<Attribute name="MAX_CU" ID="11" TYPE="u8"/>
+		</VendorRsp>
+	</VendorCmd>
 </WCN_VenTool>
