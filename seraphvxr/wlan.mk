@@ -10,14 +10,14 @@
 # e.g. TARGET_WLAN_CHIP := kiwi_v2
 #	builds qca_cld3_kiwi_v2.ko
 #
-#	Copies configuration files from device/qcom/wlan/sun/ to
+#	Copies configuration files from device/qcom/wlan/seraph/ to
 #	$(TARGET_COPY_OUT_VENDOR)/etc/wifi/ like,
 #
 #	WCNSS_qcom_cfg_kiwi_v2.ini -> kiwi_v2/WCNSS_qcom_cfg.ini
 #
 #
 
-TARGET_WLAN_CHIP := kiwi_v2 peach peach_v2 wcn7750 qca6750 wcn7760
+TARGET_WLAN_CHIP := peach_v2
 
 WLAN_CHIPSET := qca_cld3
 
@@ -34,48 +34,33 @@ ifneq ($(TARGET_WLAN_CHIP),)
 else
 	WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
 endif
-ifneq ($(wildcard $(QCPATH)/wlan/common-tools),)
 WLAN_MODULES_VENDOR += wifilearner
-WLAN_MODULES_VENDOR += ctrlapp_dut
-WLAN_MODULES_VENDOR += libdpp_manager
-WLAN_MODULES_VENDOR += dppdaemon
-WLAN_MODULES_VENDOR += cnss_diag
-WLAN_MODULES_VENDOR += vendor_cmd_tool
-endif
-ifneq ($(wildcard $(QCPATH)/wlan/utils),)
 WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
 WLAN_MODULES_VENDOR += wificfrtool
-WLAN_MODULES_VENDOR += athdiag
-WLAN_MODULES_VENDOR += hal_proxy_daemon
-WLAN_MODULES_VENDOR += spectraltool
-WLAN_MODULES_VENDOR += pktlogconf
-endif
-ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-ss),)
+WLAN_MODULES_VENDOR += ctrlapp_dut
 WLAN_MODULES_VENDOR += libwpa_drv_oem
-endif
-ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-hmd),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
-endif
-ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
-WLAN_MODULES_VENDOR += wifi_qos_daemon
-endif
-ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174
 WLAN_MODULES_VENDOR += libtlvutil
 WLAN_MODULES_VENDOR += libtlv2
+WLAN_MODULES_VENDOR += libdpp_manager
+WLAN_MODULES_VENDOR += dppdaemon
 WLAN_MODULES_VENDOR += wifimyftm
 WLAN_MODULES_VENDOR += myftm
-endif
-ifneq ($(wildcard $(QCPATH)/ftm),)
 WLAN_MODULES_VENDOR += ftmdaemon
 WLAN_MODULES_VENDOR += wdsdaemon
-endif
-ifneq ($(wildcard $(QCPATH)/wlan/cnss-daemon),)
+WLAN_MODULES_VENDOR += athdiag
+WLAN_MODULES_VENDOR += cnss_diag
+WLAN_MODULES_VENDOR += vendor_cmd_tool
+WLAN_MODULES_VENDOR += hal_proxy_daemon
+WLAN_MODULES_VENDOR += spectraltool
+WLAN_MODULES_VENDOR += sigma_dut
+WLAN_MODULES_VENDOR += e_loop
 WLAN_MODULES_VENDOR += cnss-daemon
 WLAN_MODULES_VENDOR += cnss_cli
-endif
+WLAN_MODULES_VENDOR += pktlogconf
 WLAN_MODULES_VENDOR += libcld80211
 WLAN_MODULES_VENDOR += libwifi-hal-ctrl
 WLAN_MODULES_VENDOR += libwifi-hal-qcom
@@ -85,8 +70,6 @@ WLAN_MODULES_VENDOR += wpa_supplicant
 WLAN_MODULES_VENDOR += hostapd
 WLAN_MODULES_VENDOR += hostapd_cli
 WLAN_MODULES_VENDOR += hs20-osu-client
-WLAN_MODULES_VENDOR += sigma_dut
-WLAN_MODULES_VENDOR += e_loop
 
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
@@ -95,17 +78,17 @@ WIFI_HIDL_FEATURE_AWARE := true
 ifneq ($(TARGET_WLAN_CHIP),)
 	PRODUCT_COPY_FILES += \
 			      $(foreach chip, $(TARGET_WLAN_CHIP), \
-			      device/qcom/wlan/sun/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
+			      device/qcom/wlan/seraph/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
 else
 	PRODUCT_COPY_FILES += \
-			      device/qcom/wlan/sun/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
+			      device/qcom/wlan/seraph/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
 
 endif
 
 PRODUCT_COPY_FILES += \
-				device/qcom/wlan/sun/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-				device/qcom/wlan/sun/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
-				device/qcom/wlan/sun/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
+				device/qcom/wlan/seraph/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+				device/qcom/wlan/seraph/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+				device/qcom/wlan/seraph/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml

@@ -10,15 +10,21 @@
 # e.g. TARGET_WLAN_CHIP := kiwi_v2
 #	builds qca_cld3_kiwi_v2.ko
 #
-#	Copies configuration files from device/qcom/wlan/sun/ to
+#	Copies configuration files from device/qcom/wlan/hamoa_la/ to
 #	$(TARGET_COPY_OUT_VENDOR)/etc/wifi/ like,
 #
 #	WCNSS_qcom_cfg_kiwi_v2.ini -> kiwi_v2/WCNSS_qcom_cfg.ini
 #
 #
 
-TARGET_WLAN_CHIP := kiwi_v2 peach peach_v2 wcn7750 qca6750 wcn7760
+include device/qcom/wlan//vendor_board_common.mk
 
+# Soong Values for controling Customer variant builds
+$(call soong_config_set,qtiwlan,hwasan,false)
+$(call soong_config_set,qtiwlan,hy11,false)
+$(call soong_config_set,qtiwlan,hy22,false)
+
+TARGET_WLAN_CHIP := kiwi_v2
 WLAN_CHIPSET := qca_cld3
 
 # Force chip-specific DLKM name
@@ -30,10 +36,11 @@ WLAN_MODULES_VENDOR := $(WPA)
 
 # Package chip specific ko files if TARGET_WLAN_CHIP is defined.
 ifneq ($(TARGET_WLAN_CHIP),)
-	WLAN_MODULES_VENDOR += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip).ko)
+	WLAN_MODULES_VENDOR += $(patsubst %, $(WLAN_CHIPSET)_%.ko, $(TARGET_WLAN_CHIP))
 else
 	WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
 endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/common-tools),)
 WLAN_MODULES_VENDOR += wifilearner
 WLAN_MODULES_VENDOR += ctrlapp_dut
@@ -41,7 +48,17 @@ WLAN_MODULES_VENDOR += libdpp_manager
 WLAN_MODULES_VENDOR += dppdaemon
 WLAN_MODULES_VENDOR += cnss_diag
 WLAN_MODULES_VENDOR += vendor_cmd_tool
+
+# Setting this flag to enable HY11 bins inclusion. keep this line here as common-tools is hy11 shippable
+#$(call soong_config_set,qtiwlan,hy11,true)
+# Add binaries under this, which needs to be delivered to HY11 builds
+WLAN_MODULES_VENDOR += wifi_qos_daemon
 endif
+
+ifneq (,$(filter hwaddress,$(SANITIZE_TARGET)))
+$(call soong_config_set,qtiwlan,hwasan,true)
+endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/utils),)
 WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
@@ -59,7 +76,9 @@ WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
 endif
 ifneq ($(wildcard $(QCPATH)/wlan/noship/wifi_qos_daemon),)
 WLAN_MODULES_VENDOR += wifi_qos_daemon
+WLAN_MODULES_VENDOR += libtxpbcsv
 endif
+
 ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
 WLAN_MODULES_VENDOR += libtcmd
 WLAN_MODULES_VENDOR += libtestcmd6174
@@ -94,18 +113,17 @@ WIFI_HIDL_FEATURE_AWARE := true
 # Copy chip specific INI files if TARGET_WLAN_CHIP is defined
 ifneq ($(TARGET_WLAN_CHIP),)
 	PRODUCT_COPY_FILES += \
-			      $(foreach chip, $(TARGET_WLAN_CHIP), \
-			      device/qcom/wlan/sun/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
+			      $(call product-copy-files-by-pattern,device/qcom/wlan/hamoa_la/WCNSS_qcom_cfg_%.ini,$(TARGET_COPY_OUT_VENDOR)/etc/wifi/%/WCNSS_qcom_cfg.ini,$(TARGET_WLAN_CHIP))
 else
 	PRODUCT_COPY_FILES += \
-			      device/qcom/wlan/sun/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
+			      device/qcom/wlan/hamoa_la/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
 
 endif
 
 PRODUCT_COPY_FILES += \
-				device/qcom/wlan/sun/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-				device/qcom/wlan/sun/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
-				device/qcom/wlan/sun/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
+				device/qcom/wlan/hamoa_la/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+				device/qcom/wlan/hamoa_la/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+				device/qcom/wlan/hamoa_la/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml
@@ -119,9 +137,6 @@ QC_WIFI_HIDL_FEATURE_DUAL_AP := true
 # Enable vendor properties.
 PRODUCT_PROPERTY_OVERRIDES += \
 	wifi.aware.interface=wifi-aware0
-
-# Enable STA + STA Feature.
-QC_WIFI_HIDL_FEATURE_DUAL_STA := true
 
 #Disable cnss-daemon QMI communication with FW
 TARGET_USES_NO_FW_QMI_CLIENT := true

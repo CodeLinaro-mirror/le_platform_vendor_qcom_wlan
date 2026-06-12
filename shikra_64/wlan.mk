@@ -1,8 +1,5 @@
 WLAN_CHIPSET := qca_cld3
 
-# WLAN wear specific defconfig
-WLAN_PROFILE := wear
-
 #WPA
 WPA := wpa_cli
 
