@@ -111,6 +111,9 @@ TARGET_CAL_DATA_CLEAR := true
 #Disable Perf tuner in cnss-daemon
 TARGET_USES_NO_CNSS_DP := true
 
+#Enable caldb feature (in wearable SP)
+TARGET_USES_LOW_POWER_CLIENT := true
+
 # Enable vendor properties.
 PRODUCT_PROPERTY_OVERRIDES += \
 	wifi.aware.interface=wifi-aware0

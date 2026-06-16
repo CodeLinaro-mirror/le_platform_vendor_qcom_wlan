@@ -33,11 +33,11 @@ WPA := wpa_cli
 WLAN_MODULES_VENDOR := $(WPA)
 
 # Package chip specific ko files if TARGET_WLAN_CHIP is defined.
-#ifneq ($(TARGET_WLAN_CHIP),)
-	#WLAN_MODULES_VENDOR += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip).ko)
-#else
-	#WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
-#endif
+ifneq ($(TARGET_WLAN_CHIP),)
+	WLAN_MODULES_VENDOR += $(foreach chip, $(TARGET_WLAN_CHIP), $(WLAN_CHIPSET)_$(chip).ko)
+else
+	WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
+endif
 
 ifneq ($(wildcard $(QCPATH)/wlan/common-tools),)
 WLAN_MODULES_VENDOR += wifilearner
@@ -132,4 +132,5 @@ TARGET_USES_NO_FW_QMI_CLIENT := true
 TARGET_USES_NO_DMS_QMI_CLIENT := true
 
 
+PRODUCT_PACKAGES += $(WLAN_MODULES_VENDOR)
 PRODUCT_PACKAGES += libwifi-hal

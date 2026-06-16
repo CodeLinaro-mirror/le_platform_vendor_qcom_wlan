@@ -7,18 +7,22 @@
 #
 # It also installs chip specific INI files.
 #
-# e.g. TARGET_WLAN_CHIP := qca6490 qca6390
-#	builds qca_cld3_qca6490.ko and qca_cld3_qca6390.ko
+# e.g. TARGET_WLAN_CHIP := kiwi_v2
+#	builds qca_cld3_kiwi_v2.ko
 #
-#	Copies configuration files from device/qcom/wlan/parrot/ to
+#	Copies configuration files from device/qcom/wlan/malabar/ to
 #	$(TARGET_COPY_OUT_VENDOR)/etc/wifi/ like,
 #
-#	WCNSS_qcom_cfg_qca6490.ini -> qca6490/WCNSS_qcom_cfg.ing
-#	WCNSS_qcom_cfg_qca6390.ini -> qca6390/WCNSS_qcom_cfg.ing
+#	WCNSS_qcom_cfg_kiwi_v2.ini -> kiwi_v2/WCNSS_qcom_cfg.ini
 #
 #
-TARGET_WLAN_CHIP := qca6750 adrastea qca6490
 
+# Soong Values for controling Customer variant builds
+$(call soong_config_set,qtiwlan,hwasan,false)
+$(call soong_config_set,qtiwlan,hy11,false)
+$(call soong_config_set,qtiwlan,hy22,false)
+
+TARGET_WLAN_CHIP := adrastea
 WLAN_CHIPSET := qca_cld3
 
 # Force chip-specific DLKM name
@@ -38,22 +42,60 @@ endif
 ifneq ($(wildcard $(QCPATH)/wlan/common-tools),)
 WLAN_MODULES_VENDOR += wifilearner
 WLAN_MODULES_VENDOR += ctrlapp_dut
+WLAN_MODULES_VENDOR += libdpp_manager
+WLAN_MODULES_VENDOR += dppdaemon
+WLAN_MODULES_VENDOR += cnss_diag
+WLAN_MODULES_VENDOR += vendor_cmd_tool
+
+endif
+
+ifneq (,$(filter hwaddress,$(SANITIZE_TARGET)))
+$(call soong_config_set,qtiwlan,hwasan,true)
 endif
 
 ifneq ($(wildcard $(QCPATH)/wlan/utils),)
 WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
-WLAN_MODULES_VENDOR += lowirpcd
 WLAN_MODULES_VENDOR += wificfrtool
+WLAN_MODULES_VENDOR += athdiag
+WLAN_MODULES_VENDOR += hal_proxy_daemon
+WLAN_MODULES_VENDOR += spectraltool
+WLAN_MODULES_VENDOR += pktlogconf
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-ss),)
+WLAN_MODULES_VENDOR += libwpa_drv_oem
+endif
+ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-hmd),)
+WLAN_MODULES_VENDOR += libwpa_drv_oem_hmd
 endif
 
-ifeq ($(TARGET_BOARD_PLATFORM),parrot)
-ifeq ($(TARGET_BOARD_SUFFIX),66)
 ifneq ($(wildcard $(QCPATH)/wlan/ath6kl-utils),)
+WLAN_MODULES_VENDOR += libtcmd
+WLAN_MODULES_VENDOR += libtestcmd6174
+WLAN_MODULES_VENDOR += libtlvutil
+WLAN_MODULES_VENDOR += libtlv2
 WLAN_MODULES_VENDOR += wifimyftm
+WLAN_MODULES_VENDOR += myftm
 endif
+ifneq ($(wildcard $(QCPATH)/ftm),)
+WLAN_MODULES_VENDOR += ftmdaemon
+WLAN_MODULES_VENDOR += wdsdaemon
 endif
+ifneq ($(wildcard $(QCPATH)/wlan/cnss-daemon),)
+WLAN_MODULES_VENDOR += cnss-daemon
+WLAN_MODULES_VENDOR += cnss_cli
 endif
+WLAN_MODULES_VENDOR += libcld80211
+WLAN_MODULES_VENDOR += libwifi-hal-ctrl
+WLAN_MODULES_VENDOR += libwifi-hal-qcom
+WLAN_MODULES_VENDOR += lib_driver_cmd_qcwcn
+WLAN_MODULES_VENDOR += libwpa_client
+WLAN_MODULES_VENDOR += wpa_supplicant
+WLAN_MODULES_VENDOR += hostapd
+WLAN_MODULES_VENDOR += hostapd_cli
+WLAN_MODULES_VENDOR += hs20-osu-client
+WLAN_MODULES_VENDOR += sigma_dut
+WLAN_MODULES_VENDOR += e_loop
 
 #Enable WIFI AWARE FEATURE
 WIFI_HIDL_FEATURE_AWARE := true
@@ -62,18 +104,17 @@ WIFI_HIDL_FEATURE_AWARE := true
 ifneq ($(TARGET_WLAN_CHIP),)
 	PRODUCT_COPY_FILES += \
 			      $(foreach chip, $(TARGET_WLAN_CHIP), \
-			      device/qcom/wlan/parrot/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
+			      device/qcom/wlan/malabar/WCNSS_qcom_cfg_$(chip).ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/$(chip)/WCNSS_qcom_cfg.ini)
 else
 	PRODUCT_COPY_FILES += \
-			      device/qcom/wlan/parrot/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
+			      device/qcom/wlan/malabar/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
 
 endif
 
 PRODUCT_COPY_FILES += \
-				device/qcom/wlan/parrot/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-				device/qcom/wlan/parrot/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
-				device/qcom/wlan/parrot/icm.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/icm.conf \
-				device/qcom/wlan/parrot/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
+				device/qcom/wlan/malabar/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+				device/qcom/wlan/malabar/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+				device/qcom/wlan/malabar/vendor_cmd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/vendor_cmd.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
                                 frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml
@@ -97,23 +138,17 @@ TARGET_USES_NO_FW_QMI_CLIENT := true
 #Disable DMS MAC address feature in cnss-daemon
 TARGET_USES_NO_DMS_QMI_CLIENT := true
 
-#Disable subnet detection
-TARGET_USES_NO_SUBNET_DETECTION := true
-
-ifeq ($(TARGET_BOARD_PLATFORM),parrot)
-ifeq ($(TARGET_BOARD_SUFFIX),66)
-PRODUCT_PACKAGES += icnss2.ko
-PRODUCT_PACKAGES += wlan_firmware_service.ko
-PRODUCT_PACKAGES += cnss_nl.ko
-PRODUCT_PACKAGES += cnss_prealloc.ko
-PRODUCT_PACKAGES += cnss_utils.ko
-PRODUCT_PACKAGES += cnss2.ko
-PRODUCT_PACKAGES += cnss_plat_ipc_qmi_svc.ko
-
 WLAN_PLATFORM_KBUILD_OPTIONS := CONFIG_CNSS_OUT_OF_TREE=y CONFIG_ICNSS2=m \
 				CONFIG_ICNSS2_QMI=y CONFIG_CNSS_QMI_SVC=m \
 				CONFIG_CNSS_GENL=m CONFIG_WCNSS_MEM_PRE_ALLOC=m \
 				CONFIG_CNSS_UTILS=m KERNEL_SUPPORTS_NESTED_COMPOSITES=n
-endif
-endif
+
+WLAN_MODULES_VENDOR += icnss2.ko
+WLAN_MODULES_VENDOR += wlan_firmware_service.ko
+WLAN_MODULES_VENDOR += cnss_nl.ko
+WLAN_MODULES_VENDOR += cnss_prealloc.ko
+WLAN_MODULES_VENDOR += cnss_utils.ko
+
 PRODUCT_PACKAGES += $(WLAN_MODULES_VENDOR)
+PRODUCT_PACKAGES += libwifi-hal
+

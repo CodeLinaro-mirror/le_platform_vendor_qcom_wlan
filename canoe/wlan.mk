@@ -109,6 +109,10 @@ WLAN_MODULES_VENDOR += hal_proxy_daemon
 WLAN_MODULES_VENDOR += spectraltool
 WLAN_MODULES_VENDOR += pktlogconf
 endif
+ifeq ($(wildcard $(QCPATH)/wlan/utils),)
+$(call soong_config_set,qtiwlan,hy22,true)
+WLAN_MODULES_VENDOR += init.vendor.wlan.rc
+endif
 ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-ss),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem
 endif
