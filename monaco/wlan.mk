@@ -9,7 +9,6 @@ WPA := wpa_cli
 WLAN_MODULES_VENDOR += $(WLAN_CHIPSET)_wlan.ko
 WLAN_MODULES_VENDOR += wifilearner
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
-WLAN_MODULES_VENDOR += wificfrtool
 WLAN_MODULES_VENDOR += ctrlapp_dut
 ifneq ($(wildcard $(QCPATH)/wlan/oem/oem-ss),)
 WLAN_MODULES_VENDOR += libwpa_drv_oem

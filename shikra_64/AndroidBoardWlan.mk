@@ -25,6 +25,6 @@ LOCAL_SRC_FILES    := hostapd.deny
 include $(BUILD_PREBUILT)
 
 # create symbolic links for INI file
-$(shell mkdir -p $(TARGET_OUT_VENDOR)/firmware/wlan/qca_cld; \
+$(shell mkdir -p $(TARGET_OUT_VENDOR)/firmware/wlan/qca_cld/wlan; \
 ln -sf /vendor/etc/wifi/WCNSS_qcom_cfg.ini \
-$(TARGET_OUT_VENDOR)/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini)
+$(TARGET_OUT_VENDOR)/firmware/wlan/qca_cld/wlan/WCNSS_qcom_cfg.ini)

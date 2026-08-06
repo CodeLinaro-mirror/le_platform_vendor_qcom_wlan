@@ -119,3 +119,16 @@ TARGET_CAL_DATA_CLEAR := true
 ifeq "$(wildcard external/wpa_supplicant_8/src/pasn/pasn_common.c)" ""
 ${call soong_config_set,wifi,libpasn_support,false}
 endif
+
+# Enable wpa_supplicant/hostapd vendor AIDL service
+$(call soong_config_set_bool,wpa_supplicant_8,enable_vendor_aidl,true)
+
+ifneq ($(filter 17 CinnamonBun,$(PLATFORM_VERSION)),)
+$(call soong_config_set_bool,wifi,android_17_support,true)
+endif
+
+ifeq ($(findstring true,$(TARGET_FWK_SUPPORTS_FULL_VALUEADDS) $(TARGET_BOARD_AUTO)),true)
+ifndef SOONG_CONFIG_qtiwifi_automobile
+$(call soong_config_set_bool,qtiwifi,automobile,true)
+endif #SOONG_CONFIG_qtiwifi_automobile
+endif #TARGET_FWK_SUPPORTS_FULL_VALUEADDS | TARGET_BOARD_AUTO

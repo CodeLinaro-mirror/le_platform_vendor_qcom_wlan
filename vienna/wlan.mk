@@ -1,6 +1,6 @@
 WLAN_CHIPSET := qca_cld3
 
-${call soong_config_set,wifi,libpasn_support,false}
+${call soong_config_set,wifi,libpasn_support,true}
 # WLAN wear specific defconfig
 WLAN_PROFILE := wear
 
@@ -49,16 +49,6 @@ WLAN_MODULES_VENDOR += hostapd
 WLAN_MODULES_VENDOR += hostapd_cli
 WLAN_MODULES_VENDOR += android.hardware.wifi-service
 WLAN_MODULES_VENDOR += $(WPA)
-ifeq ($(TARGET_SUPPORT_WIFI_RECOVERY),true)
-WLAN_MODULES_VENDOR += iw_recovery
-WLAN_MODULES_VENDOR += wpa_supplicant_recovery
-WLAN_MODULES_VENDOR += wpa_cli_recovery
-WLAN_MODULES_VENDOR += hostapd_recovery
-WLAN_MODULES_VENDOR += hostapd_cli_recovery
-WLAN_MODULES_VENDOR += dnsmasq_recovery
-WLAN_MODULES_VENDOR += ping_recovery
-WLAN_MODULES_VENDOR += dhcpdbg_recovery
-endif
 
 #Enable rc file from wpa_supplicant
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY ?= true
@@ -83,11 +73,10 @@ ifeq ($(TARGET_SUPPORT_WIFI_RECOVERY),true)
 	$(BOARD_WLAN_DIR)/vienna/WCNSS_qcom_cfg.ini:recovery/root/lib/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
 endif
 
-ifneq ($(TARGET_SUPPORTS_WEARABLES),true)
+#Product xml files to enable different interfaces support from wifi frameworks
+#Enable NAN/Aware
 PRODUCT_COPY_FILES += \
-	frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
-	frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml
-endif
+	frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml
 
 WLAN_MODULES_VENDOR += cnss2_sdio.ko
 WLAN_MODULES_VENDOR += qcn_sdio.ko
@@ -125,6 +114,11 @@ TARGET_CAL_DATA_CLEAR := true
 
 #Enable caldb feature (in wearable SP)
 TARGET_USES_LOW_POWER_CLIENT := true
+
+ifeq ($(TARGET_SUPPORT_WIFI_RECOVERY),true)
+PRODUCT_PROPERTY_OVERRIDES += \
+       vendor.wlan.recovery=true
+endif
 
 # Enable vendor properties.
 PRODUCT_PROPERTY_OVERRIDES += \

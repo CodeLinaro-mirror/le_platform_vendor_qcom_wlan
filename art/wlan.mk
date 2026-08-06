@@ -23,7 +23,7 @@ $(call soong_config_set,qtiwlan,hwasan,false)
 $(call soong_config_set,qtiwlan,hy11,false)
 $(call soong_config_set,qtiwlan,hy22,false)
 
-TARGET_WLAN_CHIP := peach_v2 fig fig_v2
+TARGET_WLAN_CHIP := peach_v2 fig fig_v2 wcn7750 kiwi_v2
 WLAN_CHIPSET := qca_cld3
 
 # Force chip-specific DLKM name
@@ -105,6 +105,8 @@ ifneq ($(wildcard $(QCPATH)/wlan/utils),)
 WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
 WLAN_MODULES_VENDOR += wificfrtool
+WLAN_MODULES_VENDOR += libcfr_netlink
+WLAN_MODULES_VENDOR += libcfr_vendor
 WLAN_MODULES_VENDOR += athdiag
 WLAN_MODULES_VENDOR += hal_proxy_daemon
 WLAN_MODULES_VENDOR += spectraltool
