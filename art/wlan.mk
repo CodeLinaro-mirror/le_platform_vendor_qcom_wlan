@@ -105,8 +105,6 @@ ifneq ($(wildcard $(QCPATH)/wlan/utils),)
 WLAN_MODULES_VENDOR += qsh_wifi_test
 WLAN_MODULES_VENDOR += init.vendor.wlan.rc
 WLAN_MODULES_VENDOR += wificfrtool
-WLAN_MODULES_VENDOR += libcfr_netlink
-WLAN_MODULES_VENDOR += libcfr_vendor
 WLAN_MODULES_VENDOR += athdiag
 WLAN_MODULES_VENDOR += hal_proxy_daemon
 WLAN_MODULES_VENDOR += spectraltool
